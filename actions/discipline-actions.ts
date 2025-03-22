@@ -13,7 +13,6 @@ import type {
   TimetableFormValues,
 } from "@/lib/schemas";
 import { fetchData } from "@/lib/api";
-import { getCookie } from "./cookies-actions";
 import { cookies } from "next/headers";
 
 const API_URL = `${process.env.NEXT_PUBLIC_URL_BACKEND}`;

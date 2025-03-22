@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     
         const response = await fetch(`${process.env.NEXT_PUBLIC_URL_BACKEND}/user/verifyAdmin`, {
           headers: {
-            Authorization: `Bearer ${jwtToken.value}`,
+            Authorization: `Bearer ${jwtToken}`,
           },
           credentials: "include",
         });
@@ -65,6 +65,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         }
     
         const data: UserData = await response.json();
+        console.log(data)
         setUserData(data);
       } catch (error) {
         console.error("Error fetching user data:", error);

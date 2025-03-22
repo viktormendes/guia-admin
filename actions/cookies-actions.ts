@@ -7,5 +7,5 @@ export async function deleteCookie(name: string) {
 }
 
 export async function getCookie(name: string) {
-    return (await cookies()).get(name);
+    return (await cookies()).get("jwt")?.value;
 }

@@ -153,7 +153,7 @@ export default function DisciplinesContent({
 
   // Get prerequisites for a discipline
   const getDisciplinePrerequisites = (disciplineId: number) => {
-    const prerequisiteIds = prerequisites.filter((p) => p.disciplineId === disciplineId).map((p) => p.prerequisiteId)
+    const prerequisiteIds = prerequisites?.filter((p) => p.disciplineId === disciplineId)?.map((p) => p.prerequisiteId) || []
 
     return disciplines.filter((d) => prerequisiteIds.includes(d.id))
   }
@@ -186,7 +186,7 @@ export default function DisciplinesContent({
 
       if (newDisciplineData) {
         // Adicionar a nova disciplina ao estado local
-        setDisciplines([...disciplines, newDisciplineData])
+        setDisciplines((prev) => [...prev, newDisciplineData])
 
         // Adicionar pré-requisitos se houver
         if (selectedPrerequisites.length > 0) {
