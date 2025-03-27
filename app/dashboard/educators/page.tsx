@@ -1,15 +1,18 @@
 // Adicionar tratamento de erros e configuração para renderização dinâmica
 import EducatorsContent from "@/components/educator-content"
 import { fetchEducators } from "@/actions/educator-actions"
-
+import { fetchUserData } from "@/actions/discipline-actions"
 // Forçar renderização dinâmica para evitar problemas de pré-renderização
 export const dynamic = "force-dynamic"
 
 export default async function EducatorsPage() {
   try {
-    const educators = await fetchEducators()
+    const [educators, userData] = await Promise.all([
+      fetchEducators(),
+      fetchUserData(),
+    ])
 
-    return <EducatorsContent initialEducators={educators} />
+    return <EducatorsContent initialEducators={educators} initialUserData={userData} />
   } catch (error) {
     console.error("Error loading educators page:", error)
     // Renderizar um estado de fallback em caso de erro

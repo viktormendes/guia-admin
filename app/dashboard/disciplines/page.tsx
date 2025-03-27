@@ -1,5 +1,5 @@
 import DisciplinesContent from "@/components/discipline-content"
-import { fetchAllDisciplines } from "@/actions/discipline-actions"
+import { fetchAllDisciplines, fetchUserData } from "@/actions/discipline-actions"
 import { fetchPrerequisites } from "@/actions/prerequisite-actions"
 import { fetchTimetables } from "@/actions/timetable-actions"
 import { fetchEducators } from "@/actions/educator-actions"
@@ -9,11 +9,12 @@ export const dynamic = "force-dynamic"
 
 export default async function DisciplinesPage() {
   try {
-    const [disciplines, prerequisites, timetables, educators] = await Promise.all([
+    const [disciplines, prerequisites, timetables, educators, userData] = await Promise.all([
       fetchAllDisciplines(),
       fetchPrerequisites(),
       fetchTimetables(),
       fetchEducators(),
+      fetchUserData(),
     ])
 
     return (
@@ -22,6 +23,7 @@ export default async function DisciplinesPage() {
         initialPrerequisites={prerequisites}
         initialTimetables={timetables}
         initialEducators={educators}
+        initialUserData={userData}
       />
     )
   } catch (error) {

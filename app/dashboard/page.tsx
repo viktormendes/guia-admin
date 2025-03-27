@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import DashboardClientPage from "./DashboardClientPage"
-import { fetchAllDisciplines } from "@/actions/discipline-actions"
+import { fetchAllDisciplines, fetchUserData } from "@/actions/discipline-actions"
 import { fetchTimetables } from "@/actions/timetable-actions"
 import { fetchEducators } from "@/actions/educator-actions"
 
@@ -14,17 +14,18 @@ export const dynamic = "force-dynamic"
 
 export default async function DashboardPage() {
   try {
-    const [disciplines, timetables, educators] = await Promise.all([
+    const [disciplines, timetables, educators, userData] = await Promise.all([
       fetchAllDisciplines(),
       fetchTimetables(),
       fetchEducators(),
+      fetchUserData(),
     ])
-
     return (
       <DashboardClientPage
         initialDisciplines={disciplines}
         initialEducators={educators}
         initialTimetables={timetables}
+        initialUserData={userData}
       />
     )
   } catch (error) {

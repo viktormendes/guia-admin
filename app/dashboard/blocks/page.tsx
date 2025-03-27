@@ -4,10 +4,11 @@ import { fetchClassrooms } from "@/actions/rooms-actions"
 import ClassroomsContent from "@/components/classroom-content"
 import { fetchBlocks } from "@/actions/block-actions"
 import { fetchUserData } from "@/actions/discipline-actions"
+import BlocksContent from "@/components/blocks-content"
 
 export const dynamic = "force-dynamic"
 
-export default async function ClassroomsPage() {
+export default async function BlocksPage() {
   try {
     const [classrooms, blocks, userData] = await Promise.all([
       fetchClassrooms(),
@@ -19,7 +20,7 @@ export default async function ClassroomsPage() {
       throw new Error("Erro ao carregar dados")
     }
 
-    return <ClassroomsContent initClassrooms={classrooms} initBlocks={blocks} initUserData={userData} />
+    return <BlocksContent initialBlocks={blocks} initialUserData={userData} />
   } catch (error) {
     console.error("Erro ao carregar página de salas:", error)
     return (

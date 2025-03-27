@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import DashboardLayout from "@/components/dashboard-layout"
+import DashboardLayout, { UserData } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookOpen, Users, Home, Clock, AlertTriangle, Calendar } from "lucide-react"
 import Link from "next/link"
@@ -23,8 +23,9 @@ interface IDashboardClientPageProps {
   initialEducators: IEducator[]
   initialTimetables: ITimetable[]
   initialDisciplines: IDiscipline[]
+  initialUserData: UserData
 }
-export default function DashboardClientPage({ initialDisciplines, initialEducators, initialTimetables }: IDashboardClientPageProps) {
+export default function DashboardClientPage({ initialDisciplines, initialEducators, initialTimetables, initialUserData }: IDashboardClientPageProps) {
   const [disciplinesWithoutTimetables, setDisciplinesWithoutTimetables] = useState(0)
   const [disciplinesWithSinglePeriod, setDisciplinesWithSinglePeriod] = useState(0)
   const [disciplinesByPeriod, setDisciplinesByPeriod] = useState({
@@ -114,7 +115,7 @@ export default function DashboardClientPage({ initialDisciplines, initialEducato
   }, [])
 
   return (
-    <DashboardLayout>
+    <DashboardLayout initUserData={initialUserData}>
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h2>

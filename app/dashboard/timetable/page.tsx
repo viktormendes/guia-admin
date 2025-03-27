@@ -1,5 +1,5 @@
 import TimetableContent from "@/components/timetable-content"
-import { fetchAllDisciplines } from "@/actions/discipline-actions"
+import { fetchAllDisciplines, fetchUserData } from "@/actions/discipline-actions"
 import { fetchTimetables } from "@/actions/timetable-actions"
 
 // Forçar renderização dinâmica para evitar problemas de pré-renderização
@@ -7,9 +7,13 @@ export const dynamic = "force-dynamic"
 
 export default async function TimetablePage() {
   try {
-    const [disciplines, timetables] = await Promise.all([fetchAllDisciplines(), fetchTimetables()])
+    const [disciplines, timetables, userData] = await Promise.all([
+      fetchAllDisciplines(),
+      fetchTimetables(),
+      fetchUserData(),
+    ])
 
-    return <TimetableContent initialDisciplines={disciplines} initialTimetables={timetables} />
+    return <TimetableContent initialDisciplines={disciplines} initialTimetables={timetables} initialUserData={userData} />
   } catch (error) {
     console.error("Error loading timetable page:", error)
     // Renderizar um estado de fallback em caso de erro
