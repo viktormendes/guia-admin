@@ -156,7 +156,7 @@ export default function TimetableContent({initialDisciplines, initialTimetables,
                                   {timetableGrid[timeSlot.id][day.id].map((discipline) => (
                                     <div
                                       key={discipline.id}
-                                      className={cn("p-2 rounded-md text-sm", "bg-green-50 border border-green-200")}
+                                      className={cn("p-2 rounded-md text-sm", "bg-green-50 dark:bg-gray-900 border border-green-200 dark:border-gray-700")}
                                     >
                                       <div className="font-medium">{discipline.name}</div>
                                       <div className="flex items-center justify-between mt-1">
@@ -165,6 +165,23 @@ export default function TimetableContent({initialDisciplines, initialTimetables,
                                           {discipline.workload}h
                                         </Badge>
                                       </div>
+                                      {semesterTimetables.find((t: ITimetable) => 
+                                        t.disciplineId === discipline.id && 
+                                        t.days.includes(day.id) && 
+                                        t.hours.includes(timeSlot.id)
+                                      )?.room && (
+                                        <div className="text-xs text-muted-foreground mt-1">
+                                          {semesterTimetables.find((t: ITimetable) => 
+                                            t.disciplineId === discipline.id && 
+                                            t.days.includes(day.id) && 
+                                            t.hours.includes(timeSlot.id)
+                                          )?.room?.description} - {semesterTimetables.find((t: ITimetable) => 
+                                            t.disciplineId === discipline.id && 
+                                            t.days.includes(day.id) && 
+                                            t.hours.includes(timeSlot.id)
+                                          )?.room?.block?.description || "N/A"}
+                                        </div>
+                                      )}
                                     </div>
                                   ))}
                                 </div>
