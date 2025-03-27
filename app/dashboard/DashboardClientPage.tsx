@@ -10,22 +10,16 @@ import { Progress } from "@/components/ui/progress"
 import { IEducator } from "@/types/Educator"
 import { ITimetable } from "@/types/Timetable"
 import { IDiscipline } from "@/types/Discipline"
-
-
-const initialClassrooms = [
-  { id: 1, name: "Sala 101", building: "Bloco A", capacity: 40, type: "Classroom" },
-  { id: 2, name: "Laboratório 01", building: "Bloco B", capacity: 30, type: "Laboratory" },
-  { id: 3, name: "Sala 201", building: "Bloco A", capacity: 45, type: "Classroom" },
-  { id: 4, name: "Auditório Principal", building: "Bloco C", capacity: 120, type: "Auditorium" },
-]
+import { Room } from "./classrooms/types"
 
 interface IDashboardClientPageProps {
   initialEducators: IEducator[]
   initialTimetables: ITimetable[]
   initialDisciplines: IDiscipline[]
   initialUserData: UserData
+  initialClassrooms: Room[]
 }
-export default function DashboardClientPage({ initialDisciplines, initialEducators, initialTimetables, initialUserData }: IDashboardClientPageProps) {
+export default function DashboardClientPage({ initialDisciplines, initialEducators, initialTimetables, initialUserData, initialClassrooms }: IDashboardClientPageProps) {
   const [disciplinesWithoutTimetables, setDisciplinesWithoutTimetables] = useState(0)
   const [disciplinesWithSinglePeriod, setDisciplinesWithSinglePeriod] = useState(0)
   const [disciplinesByPeriod, setDisciplinesByPeriod] = useState({
@@ -127,7 +121,7 @@ export default function DashboardClientPage({ initialDisciplines, initialEducato
               <BookOpen className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{initialDisciplines.length}</div>
+              <div className="text-2xl font-bold">{initialDisciplines?.length}</div>
               <p className="text-xs text-muted-foreground">Em todos os semestres</p>
             </CardContent>
           </Card>
@@ -137,7 +131,7 @@ export default function DashboardClientPage({ initialDisciplines, initialEducato
               <Users className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{initialEducators.length}</div>
+              <div className="text-2xl font-bold">{initialEducators?.length}</div>
               <p className="text-xs text-muted-foreground">Membros ativos do corpo docente</p>
             </CardContent>
           </Card>
@@ -147,7 +141,7 @@ export default function DashboardClientPage({ initialDisciplines, initialEducato
               <Home className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{initialClassrooms.length}</div>
+              <div className="text-2xl font-bold">{initialClassrooms?.length}</div>
               <p className="text-xs text-muted-foreground">Disponíveis para agendamento</p>
             </CardContent>
           </Card>
@@ -157,7 +151,7 @@ export default function DashboardClientPage({ initialDisciplines, initialEducato
               <Clock className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{initialTimetables.length}</div>
+              <div className="text-2xl font-bold">{initialTimetables?.length}</div>
               <p className="text-xs text-muted-foreground">Horários de aula agendados</p>
             </CardContent>
           </Card>
