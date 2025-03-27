@@ -38,6 +38,7 @@ import { useForm } from "react-hook-form"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { createPrerequisite, deletePrerequisite } from "@/actions/prerequisite-actions"
 import { createTimetable, deleteTimetable } from "@/actions/timetable-actions"
+import { Room } from "@/app/dashboard/classrooms/types"
 
 interface IDisciplineContentProps {
   initialDisciplines: IDiscipline[]
@@ -50,6 +51,7 @@ interface IDisciplineContentProps {
     educator: { id: number; name: string; lattesLink: string }
   }[]
   initialEducators: { id: number; name: string; lattesLink: string }[]
+  initialRooms: Room[]
   initialUserData: UserData
 }
 
@@ -58,13 +60,15 @@ export default function DisciplinesContent({
   initialPrerequisites,
   initialTimetables,
   initialEducators,
-  initialUserData
+  initialUserData,
+  initialRooms,
 }: IDisciplineContentProps) {
   const [disciplines, setDisciplines] = useState(initialDisciplines)
   const [prerequisites, setPrerequisites] = useState(initialPrerequisites)
   const [timetables, setTimetables] = useState(initialTimetables)
   const [educators, setEducators] = useState(initialEducators)
-  const [searchEducator, setSearchEducator] = useState("");
+  const [rooms, setRooms] = useState<Room[]>(initialRooms || [])
+  const [searchEducator, setSearchEducator] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedSemester, setSelectedSemester] = useState<string>("all")
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
@@ -119,9 +123,10 @@ export default function DisciplinesContent({
     resolver: zodResolver(timetableSchema),
     defaultValues: {
       disciplineId: 0,
-      educatorId: 1, // Valor padrão para o primeiro educador
+      educatorId: 1,
       days: "SEG",
       hours: "AB-M",
+      roomId: 1,
     },
   })
 
@@ -403,6 +408,7 @@ export default function DisciplinesContent({
         educatorId: values.educatorId,
         days: values.days,
         hours: values.hours,
+        roomId: values.roomId,
       })
 
       if (newTimetableData) {
@@ -412,7 +418,8 @@ export default function DisciplinesContent({
           disciplineId: currentDiscipline.id,
           days: values.days,
           hours: values.hours,
-          educator: { id: values.educatorId, name: "Educador", lattesLink: "" }, // Simplificado para o exemplo
+          educator: { id: values.educatorId, name: "Educador", lattesLink: "" },
+          room: rooms.find(r => r.id === values.roomId) || null,
         }
 
         setTimetables([...timetables, newTimetable])
@@ -429,6 +436,7 @@ export default function DisciplinesContent({
           educatorId: values.educatorId,
           days: currentDiscipline.workload === 40 ? "SEG" : "SEG QUA",
           hours: currentDiscipline.workload === 40 ? "AB-M" : "AB-M AB-M",
+          roomId: 1,
         })
       }
     } catch (error) {
@@ -1143,6 +1151,7 @@ export default function DisciplinesContent({
                         <TableHead>Dias</TableHead>
                         <TableHead>Horas</TableHead>
                         <TableHead className="hidden md:table-cell">Horário</TableHead>
+                        <TableHead className="hidden md:table-cell">Sala</TableHead>
                         <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -1153,6 +1162,9 @@ export default function DisciplinesContent({
                             <TableCell>{timetable.days}</TableCell>
                             <TableCell>{timetable.hours}</TableCell>
                             <TableCell className="hidden md:table-cell">{formatTimetable(timetable)}</TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              {timetable.room ? `${timetable.room.description} - ${timetable.room.block?.description || "N/A"}` : "N/A"}
+                            </TableCell>
                             <TableCell className="text-right">
                               <Button variant="ghost" size="icon" onClick={() => handleDeleteTimetable(timetable.id)}>
                                 <Trash2 className="h-4 w-4 text-red-600" />
@@ -1162,7 +1174,7 @@ export default function DisciplinesContent({
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={4} className="h-24 text-center">
+                          <TableCell colSpan={5} className="h-24 text-center">
                             Nenhum horário encontrado. Adicione um abaixo.
                           </TableCell>
                         </TableRow>
@@ -1363,66 +1375,100 @@ export default function DisciplinesContent({
                         </div>
                       )}
 
-<FormField
-  control={addTimetableForm.control}
-  name="educatorId"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Professor</FormLabel>
-      <Popover>
-        <PopoverTrigger asChild>
-          <FormControl>
-            <Button
-              variant="outline"
-              role="combobox"
-              className="w-full justify-between"
-            >
-              {field.value
-                ? educators.find((educator) => educator.id === field.value)?.name
-                : "Selecione o professor"}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </FormControl>
-        </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0">
-          <Command>
-            <CommandInput
-              placeholder="Buscar professor..."
-              value={searchEducator}
-              onValueChange={setSearchEducator}
-            />
-            <CommandList>
-              <CommandEmpty>Nenhum professor encontrado.</CommandEmpty>
-              <CommandGroup>
-                <ScrollArea className="h-[200px]">
-                  {filteredEducators.map((educator) => (
-                    <CommandItem
-                      key={educator.id}
-                      value={educator.name}
-                      onSelect={() => {
-                        field.onChange(educator.id); // Atualiza o valor do FormField
-                        setSearchEducator(""); // Limpa a pesquisa
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          field.value === educator.id ? "opacity-100" : "opacity-0"
+                      <FormField
+                        control={addTimetableForm.control}
+                        name="educatorId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Professor</FormLabel>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className="w-full justify-between"
+                                  >
+                                    {field.value
+                                      ? educators.find((educator) => educator.id === field.value)?.name
+                                      : "Selecione o professor"}
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-[300px] p-0">
+                                <Command>
+                                  <CommandInput
+                                    placeholder="Buscar professor..."
+                                    value={searchEducator}
+                                    onValueChange={setSearchEducator}
+                                  />
+                                  <CommandList>
+                                    <CommandEmpty>Nenhum professor encontrado.</CommandEmpty>
+                                    <CommandGroup>
+                                      <ScrollArea className="h-[200px]">
+                                        {filteredEducators.map((educator) => (
+                                          <CommandItem
+                                            key={educator.id}
+                                            value={educator.name}
+                                            onSelect={() => {
+                                              field.onChange(educator.id);
+                                              setSearchEducator("");
+                                            }}
+                                          >
+                                            <Check
+                                              className={cn(
+                                                "mr-2 h-4 w-4",
+                                                field.value === educator.id ? "opacity-100" : "opacity-0"
+                                              )}
+                                            />
+                                            {educator.name}
+                                          </CommandItem>
+                                        ))}
+                                      </ScrollArea>
+                                    </CommandGroup>
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                            <FormMessage />
+                          </FormItem>
                         )}
                       />
-                      {educator.name}
-                    </CommandItem>
-                  ))}
-                </ScrollArea>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
+
+                      <FormField
+                        control={addTimetableForm.control}
+                        name="roomId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Sala</FormLabel>
+                            <Select
+                              value={field.value?.toString() || "1"}
+                              onValueChange={(value) => field.onChange(Number(value))}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione a sala" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {rooms && rooms.length > 0 ? (
+                                  rooms.map((room) => (
+                                    <SelectItem key={room.id} value={room.id.toString()}>
+                                      {room.description} - {room.block?.description || "N/A"}
+                                    </SelectItem>
+                                  ))
+                                ) : (
+                                  <SelectItem value="1" disabled>
+                                    Nenhuma sala disponível
+                                  </SelectItem>
+                                )}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </form>
                   </Form>
                 </div>
