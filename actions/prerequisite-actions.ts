@@ -83,7 +83,6 @@ export async function deletePrerequisite(
   try {
     const token = (await cookies()).get("jwt")?.value;
     if (!token) throw new Error("Token JWT não encontrado");
-    console.log(prerequisiteId)
     const res = await fetch(
       `${API_URL}/prerequisites/${prerequisiteId}`,
       {

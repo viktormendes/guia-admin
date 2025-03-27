@@ -14,8 +14,16 @@ import type {
 } from "@/lib/schemas";
 import { fetchData } from "@/lib/api";
 import { cookies } from "next/headers";
+import { UserData } from "@/components/dashboard-layout";
 
 const API_URL = `${process.env.NEXT_PUBLIC_URL_BACKEND}`;
+
+export async function fetchUserData(): Promise<UserData> {
+  return fetchData<UserData>(`${API_URL}/user/verifyAdmin`, {
+    cache: "no-store",
+    next: { tags: ["discipline", "user", "timetable", "educator", "prerequisite"] },
+  });
+}
 
 /**
  * Busca todas as disciplinas
