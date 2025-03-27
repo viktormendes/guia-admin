@@ -22,10 +22,11 @@ export type PrerequisiteFormValues = z.infer<typeof prerequisiteSchema>
 
 // Schema para criação e atualização de horários
 export const timetableSchema = z.object({
-  disciplineId: z.number().int().positive(),
-  educatorId: z.number().int().positive(),
-  days: z.string().min(1, "Dias são obrigatórios"),
-  hours: z.string().min(1, "Horas são obrigatórias"),
+  disciplineId: z.number(),
+  educatorId: z.number(),
+  days: z.string(),
+  hours: z.string(),
+  roomId: z.number(),
 })
 
 export type TimetableFormValues = z.infer<typeof timetableSchema>
