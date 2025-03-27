@@ -8,9 +8,8 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Academic Management System",
-  description: "A comprehensive system for managing academic resources",
-  generator: "v0.dev",
+  title: "GUIA - Sistema Administrativo",
+  description: "Sistema para gerenciamento de recursos acadêmicos do GUIA",
 }
 
 export default function RootLayout({
