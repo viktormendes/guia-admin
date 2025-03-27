@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import DashboardLayout from "@/components/dashboard-layout"
+import DashboardLayout, { UserData } from "@/components/dashboard-layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -50,13 +50,15 @@ interface IDisciplineContentProps {
     educator: { id: number; name: string; lattesLink: string }
   }[]
   initialEducators: { id: number; name: string; lattesLink: string }[]
+  initialUserData: UserData
 }
 
 export default function DisciplinesContent({
   initialDisciplines,
   initialPrerequisites,
   initialTimetables,
-  initialEducators
+  initialEducators,
+  initialUserData
 }: IDisciplineContentProps) {
   const [disciplines, setDisciplines] = useState(initialDisciplines)
   const [prerequisites, setPrerequisites] = useState(initialPrerequisites)
@@ -511,7 +513,7 @@ export default function DisciplinesContent({
   }
 
   return (
-    <DashboardLayout>
+    <DashboardLayout initUserData={initialUserData}>
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Disciplinas</h2>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import DashboardLayout from "@/components/dashboard-layout"
+import DashboardLayout, { UserData } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
@@ -32,8 +32,9 @@ const days = [
 interface ITimetablePageProps {
   initialDisciplines: IDiscipline[];
   initialTimetables: ITimetable[];
+  initialUserData: UserData
 }
-export default function TimetableContent({initialDisciplines, initialTimetables}: ITimetablePageProps) {
+export default function TimetableContent({initialDisciplines, initialTimetables, initialUserData}: ITimetablePageProps) {
   const [selectedSemester, setSelectedSemester] = useState<string>("1")
   const [selectedPeriod, setSelectedPeriod] = useState<string>("all")
 
@@ -86,7 +87,7 @@ export default function TimetableContent({initialDisciplines, initialTimetables}
   }, [filteredTimeSlots, semesterTimetables])
 
   return (
-    <DashboardLayout>
+    <DashboardLayout initUserData={initialUserData}>
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Horários</h2>

@@ -14,9 +14,10 @@ import { deleteCookie, getCookie } from "@/actions/cookies-actions"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
+  initUserData: UserData
 }
 
-interface UserData {
+export interface UserData {
   id: number
   firstName: string
   lastName: string
@@ -25,12 +26,12 @@ interface UserData {
   hashedRefreshToken: string
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, initUserData }: DashboardLayoutProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
-  const [userData, setUserData] = useState<UserData | null>(null)
+  const [userData, setUserData] = useState<UserData | null>(initUserData)
 
   useEffect(() => {
     setIsMounted(true)
@@ -40,40 +41,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     deleteCookie("jwt");
     router.push("/");
   }
-
-  // Fetch user data
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const jwtToken = await getCookie('jwt');
-    
-        if (!jwtToken) {
-          console.error("JWT token not found in cookies.");
-          return;
-        }
-    
-        const response = await fetch(`${process.env.NEXT_PUBLIC_URL_BACKEND}/user/verifyAdmin`, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-          credentials: "include",
-        });
-    
-    
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-    
-        const data: UserData = await response.json();
-        console.log(data)
-        setUserData(data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
