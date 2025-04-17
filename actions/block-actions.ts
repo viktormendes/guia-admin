@@ -55,7 +55,7 @@ export async function getBlock(id: number): Promise<Block> {
   }
 }
 
-export async function createBlock(data: { description: string; status: string }): Promise<Block> {
+export async function createBlock(data: { description: string; status: string, number_of_floors:number }): Promise<Block> {
   const token = (await cookies()).get("jwt")?.value;
   if (!token) throw new Error("Token JWT não encontrado");
   try {
@@ -80,7 +80,7 @@ export async function createBlock(data: { description: string; status: string })
   }
 }
 
-export async function updateBlock(id: number, data: { description?: string; status?: string }): Promise<Block> {
+export async function updateBlock(id: number, data: { description?: string; status?: string, number_of_floors:number }): Promise<Block> {
   const token = (await cookies()).get("jwt")?.value;
   if (!token) throw new Error("Token JWT não encontrado");
   try {
