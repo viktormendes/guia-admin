@@ -37,6 +37,7 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
   const [currentBlock, setCurrentBlock] = useState<Block | null>(null)
   const [newBlock, setNewBlock] = useState({
     description: "",
+    number_of_floors: 0,
     status: BlockStatus.ACTIVE,
   })
 
@@ -52,6 +53,7 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
       setBlocks([...blocks, createdBlock])
       setNewBlock({
         description: "",
+        number_of_floors: 0,
         status: BlockStatus.ACTIVE,
       })
       setIsAddDialogOpen(false)
@@ -68,6 +70,7 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
     try {
       const updatedBlock = await updateBlock(currentBlock.id, {
         description: currentBlock.description,
+        number_of_floors: currentBlock.number_of_floors,
         status: currentBlock.status,
       })
       setBlocks(blocks.map((b) => (b.id === currentBlock.id ? updatedBlock : b)))
@@ -131,6 +134,16 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
                   />
                 </div>
                 <div className="grid gap-2">
+                  <Label htmlFor="floors">Andares</Label>
+                  <Input
+                    id="floors"
+                    value={newBlock.number_of_floors}
+                    type="number"
+                    min="0"
+                    onChange={(e) => setNewBlock({ ...newBlock, number_of_floors: Number(e.target.value) })}
+                  />
+                </div>
+                <div className="grid gap-2">
                   <Label htmlFor="status">Status</Label>
                   <Select
                     value={newBlock.status}
@@ -184,6 +197,7 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
                 <TableHeader>
                   <TableRow>
                     <TableHead>Nome</TableHead>
+                    <TableHead>Andares</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
@@ -193,6 +207,7 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
                     filteredBlocks.map((block) => (
                       <TableRow key={block.id}>
                         <TableCell className="font-medium">{block.description}</TableCell>
+                        <TableCell className="font-medium">{block.number_of_floors}</TableCell>
                         <TableCell>{block.status}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
@@ -233,6 +248,14 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
                   value={currentBlock?.description || ""}
                   onChange={(e) => setCurrentBlock(currentBlock ? { ...currentBlock, description: e.target.value } : null)}
                   placeholder="ex: Bloco A"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-name">Andares</Label>
+                <Input
+                  id="edit-floor"
+                  value={currentBlock?.number_of_floors || ""}
+                  onChange={(e) => setCurrentBlock(currentBlock ? { ...currentBlock, number_of_floors: Number(e.target.value) } : null)}
                 />
               </div>
               <div className="grid gap-2">
