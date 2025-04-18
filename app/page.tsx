@@ -41,35 +41,37 @@ export default function LoginPage() {
   
       const contentType = res.headers.get("content-type");
   
-      if (res.ok && contentType?.includes("application/json")) {
+      if (contentType && contentType.includes("application/json")) {
         const data = await res.json();
-        toast({
-          title: "Sucesso",
-          description: "Login realizado com sucesso",
-        });
-        router.push("/dashboard");
-      } else {
-        let errorMessage = "Falha ao fazer o login";
   
-        if (contentType?.includes("application/json")) {
-          const errorData = await res.json();
-          errorMessage = errorData.message || errorMessage;
+        if (res.ok) {
+          toast({
+            title: "Sucesso",
+            description: "Login realizado com sucesso",
+          });
+          router.push("/dashboard");
         } else {
-          errorMessage = "Resposta inesperada do servidor";
+          toast({
+            title: data.message || "Erro",
+            description: "Falha ao fazer o login",
+            variant: "destructive",
+          });
         }
-  
+      } else {
         toast({
-          title: "Erro",
-          description: errorMessage,
+          title: "Erro inesperado",
+          description: "O servidor retornou uma resposta inválida.",
           variant: "destructive",
         });
       }
+  
     } catch (err) {
       toast({
         title: "Erro de conexão",
         description: "Não foi possível se conectar ao servidor.",
         variant: "destructive",
       });
+      console.error("Erro no login:", err);
     }
   };
   return (
