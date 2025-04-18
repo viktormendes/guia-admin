@@ -3,14 +3,15 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowUp, Check, Loader2 } from "lucide-react"
-import { toast } from "@/components/ui/use-toast"
 import { Badge } from "@/components/ui/badge"
+import { useToast } from "@/hooks/use-toast"
 
 export function VersionManager() {
   const [version, setVersion] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [updateSuccess, setUpdateSuccess] = useState(false)
+  const {toast} = useToast()
 
   useEffect(() => {
     fetchVersion()
@@ -31,7 +32,7 @@ export function VersionManager() {
       console.error("Failed to fetch version:", error)
       toast({
         title: "Error",
-        description: "Failed to fetch current version",
+        description: "Falha ao enviar versão",
         variant: "destructive",
       })
     } finally {

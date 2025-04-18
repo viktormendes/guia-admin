@@ -19,7 +19,6 @@ import { Plus, Pencil, Trash2, Search } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { createRoom, updateRoom, deleteRoom } from "../actions/rooms-actions"
-import { toast } from "sonner"
 import { Block, Room, RoomType } from "@/app/dashboard/classrooms/types"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -32,6 +31,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { useToast } from "@/hooks/use-toast"
 
 interface ClassroomsContentProps {
     initClassrooms: Room[]
@@ -47,6 +47,8 @@ export default function ClassroomsContent({initClassrooms, initBlocks, initUserD
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [currentClassroom, setCurrentClassroom] = useState<Room | null>(null)
+
+  const { toast } = useToast()
 
   const form = useForm<RoomFormValues>({
     resolver: zodResolver(roomSchema),
@@ -84,9 +86,16 @@ export default function ClassroomsContent({initClassrooms, initBlocks, initUserD
       setClassrooms([...classrooms, roomWithBlock])
       form.reset()
       setIsAddDialogOpen(false)
-      toast.success("Sala criada com sucesso")
+      toast({
+        title: "Sucesso!",
+        description: "Sala adicionado com sucesso",
+      })
     } catch (error) {
-      toast.error("Erro ao criar sala")
+      toast({
+        title: "Error",
+        description: "Erro ao adicionar a sala",
+        variant: "destructive"
+      })
       console.error(error)
     }
   }
@@ -98,9 +107,16 @@ export default function ClassroomsContent({initClassrooms, initBlocks, initUserD
       const updatedRoom = await updateRoom(currentClassroom.id, data)
       setClassrooms(classrooms.map((c) => (c.id === currentClassroom.id ? updatedRoom : c)))
       setIsEditDialogOpen(false)
-      toast.success("Sala atualizada com sucesso")
+      toast({
+        title: "Sucesso!",
+        description: "Sala editada com sucesso",
+      })
     } catch (error) {
-      toast.error("Erro ao atualizar sala")
+      toast({
+        title: "Error",
+        description: "Erro ao editar a sala",
+        variant: "destructive"
+      })
       console.error(error)
     }
   }
@@ -112,9 +128,16 @@ export default function ClassroomsContent({initClassrooms, initBlocks, initUserD
       await deleteRoom(currentClassroom.id)
       setClassrooms(classrooms.filter((c) => c.id !== currentClassroom.id))
       setIsDeleteDialogOpen(false)
-      toast.success("Sala excluída com sucesso")
+      toast({
+        title: "Sucesso!",
+        description: "Sucesso ao deletar a sala",
+      })
     } catch (error) {
-      toast.error("Erro ao excluir sala")
+      toast({
+        title: "Error",
+        description: "Erro ao deletar a sala",
+        variant: "destructive"
+      })
       console.error(error)
     }
   }

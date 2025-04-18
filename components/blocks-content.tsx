@@ -20,8 +20,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Block, BlockStatus } from "../app/dashboard/classrooms/types"
 import { createBlock, updateBlock, deleteBlock } from "@/actions/block-actions"
-import { toast } from "sonner"
 import { UserData } from "./dashboard-layout"
+import { useToast } from "@/hooks/use-toast"
 
 interface BlocksContentProps {
   initialBlocks: Block[]
@@ -41,6 +41,8 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
     status: BlockStatus.ACTIVE,
   })
 
+  const {toast} = useToast()
+
   const filteredBlocks = blocks.filter(
     (block) =>
       block.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -57,9 +59,16 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
         status: BlockStatus.ACTIVE,
       })
       setIsAddDialogOpen(false)
-      toast.success("Bloco criado com sucesso")
+      toast({
+        title: "Sucesso",
+        description: "Bloco criado com sucesso",
+      })
     } catch (error) {
-      toast.error("Erro ao criar bloco")
+      toast({
+        title: "Erro",
+        description: "Falha ao criar o bloco",
+        variant: "destructive"
+      })
       console.error(error)
     }
   }
@@ -75,9 +84,16 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
       })
       setBlocks(blocks.map((b) => (b.id === currentBlock.id ? updatedBlock : b)))
       setIsEditDialogOpen(false)
-      toast.success("Bloco atualizado com sucesso")
+      toast({
+        title: "Sucesso",
+        description: "Bloco atualizado com sucesso",
+      })
     } catch (error) {
-      toast.error("Erro ao atualizar bloco")
+      toast({
+        title: "Erro",
+        description: "Falha ao atualizar bloco",
+        variant: "destructive"
+      })
       console.error(error)
     }
   }
@@ -89,9 +105,16 @@ export default function BlocksContent({initialBlocks, initialUserData}: BlocksCo
       await deleteBlock(currentBlock.id)
       setBlocks(blocks.filter((b) => b.id !== currentBlock.id))
       setIsDeleteDialogOpen(false)
-      toast.success("Bloco excluído com sucesso")
+      toast({
+        title: "Sucesso",
+        description: "Bloco excluído com sucesso",
+      })
     } catch (error) {
-      toast.error("Erro ao excluir bloco")
+      toast({
+        title: "Erro",
+        description: "Falha ao excluir bloco",
+        variant: "destructive"
+      })
       console.error(error)
     }
   }

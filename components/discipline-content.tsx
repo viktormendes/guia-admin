@@ -30,7 +30,6 @@ import {
   deleteDiscipline,
   updateDiscipline,
 } from "@/actions/discipline-actions"
-import { toast } from "@/components/ui/use-toast"
 import { disciplineSchema, timetableSchema } from "@/lib/schemas"
 import type { DisciplineFormValues, TimetableFormValues } from "@/lib/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -39,6 +38,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { createPrerequisite, deletePrerequisite } from "@/actions/prerequisite-actions"
 import { createTimetable, deleteTimetable } from "@/actions/timetable-actions"
 import { Room } from "@/app/dashboard/classrooms/types"
+import { useToast } from "@/hooks/use-toast"
 
 interface IDisciplineContentProps {
   initialDisciplines: IDiscipline[]
@@ -81,6 +81,8 @@ export default function DisciplinesContent({
   const [searchPrerequisite, setSearchPrerequisite] = useState("")
   const [currentTimetables, setCurrentTimetables] = useState<any[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const {toast} = useToast()
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
