@@ -31,6 +31,7 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
   
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
@@ -39,7 +40,6 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      setLoading(true);
   
       const data = await res.json();
   
