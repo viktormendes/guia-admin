@@ -39,39 +39,28 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
   
-      const contentType = res.headers.get("content-type");
+      const data = await res.json();
   
-      if (contentType && contentType.includes("application/json")) {
-        const data = await res.json();
-  
-        if (res.ok) {
-          toast({
-            title: "Sucesso",
-            description: "Login realizado com sucesso",
-          });
-          router.push("/dashboard");
-        } else {
-          toast({
-            title: data.message || "Erro",
-            description: "Falha ao fazer o login",
-            variant: "destructive",
-          });
-        }
+      if (res.ok) {
+        toast({
+          title: "Sucesso",
+          description: "Login realizado com sucesso",
+        })
+        router.push(`/dashboard?token=${data.accessToken}`);
+
       } else {
         toast({
-          title: "Erro inesperado",
-          description: "O servidor retornou uma resposta inválida.",
-          variant: "destructive",
-        });
+          title: data.message,
+          description: "Falha ao fazer o login",
+          variant: "destructive"
+        })
       }
-  
     } catch (err) {
       toast({
-        title: "Erro de conexão",
-        description: "Não foi possível se conectar ao servidor.",
-        variant: "destructive",
-      });
-      console.error("Erro no login:", err);
+        title: "Erro",
+        description: "Erro de conexão com o servidor",
+        variant: "destructive"
+      })
     }
   };
   return (
