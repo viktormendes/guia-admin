@@ -39,27 +39,37 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
   
-      const data = await res.json();
+      const contentType = res.headers.get("content-type");
   
-      if (res.ok) {
+      if (res.ok && contentType?.includes("application/json")) {
+        const data = await res.json();
         toast({
           title: "Sucesso",
           description: "Login realizado com sucesso",
-        })
-
+        });
+        router.push("/dashboard");
       } else {
+        let errorMessage = "Falha ao fazer o login";
+  
+        if (contentType?.includes("application/json")) {
+          const errorData = await res.json();
+          errorMessage = errorData.message || errorMessage;
+        } else {
+          errorMessage = "Resposta inesperada do servidor";
+        }
+  
         toast({
-          title: data.message,
-          description: "Falha ao fazer o login",
-          variant: "destructive"
-        })
+          title: "Erro",
+          description: errorMessage,
+          variant: "destructive",
+        });
       }
     } catch (err) {
       toast({
-        title: "Erro",
-        description: "Erro de conexão com o servidor",
-        variant: "destructive"
-      })
+        title: "Erro de conexão",
+        description: "Não foi possível se conectar ao servidor.",
+        variant: "destructive",
+      });
     }
   };
   return (
