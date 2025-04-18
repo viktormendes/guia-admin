@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const {toast} = useToast()
   const router = useRouter()
 
@@ -38,10 +39,12 @@ export default function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+      setLoading(true);
   
       const data = await res.json();
   
       if (res.ok) {
+        setLoading(false);
         toast({
           title: "Sucesso",
           description: "Login realizado com sucesso",
@@ -49,6 +52,7 @@ export default function LoginPage() {
         router.push(`/dashboard?token=${data.accessToken}`);
 
       } else {
+        setLoading(false);
         toast({
           title: data.message,
           description: "Falha ao fazer o login",
@@ -56,7 +60,8 @@ export default function LoginPage() {
         })
       }
     } catch (err) {
-      toast({
+        setLoading(false);
+        toast({
         title: "Erro",
         description: "Erro de conexão com o servidor",
         variant: "destructive"
@@ -123,8 +128,8 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
-              Entrar
+            <Button type="submit" className="w-full" variant={loading ? "ghost" : "default"} disabled={loading}>
+              {loading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
           <div className="relative">
