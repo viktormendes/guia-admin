@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   description: "Academic Management System Dashboard",
 }
 
-// Forçar renderização dinâmica para evitar problemas de pré-renderização
 export const dynamic = "force-dynamic"
 
 export default async function DashboardPage() {
@@ -33,7 +32,6 @@ export default async function DashboardPage() {
     )
   } catch (error) {
     console.error("Error loading dashboard page:", error)
-    // Renderizar um estado de fallback em caso de erro
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">

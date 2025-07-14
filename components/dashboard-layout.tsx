@@ -4,13 +4,14 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { BookOpen, Users, Home, Menu, X, LogOut, Cuboid } from "lucide-react"
+import { BookOpen, Users, Home, Menu, X, LogOut, Cuboid, LayoutDashboard, User, FileText, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { VersionManager } from "@/components/version-manager"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Image from "next/image"
 import { deleteCookie, getCookie } from "@/actions/cookies-actions"
+import { Separator } from "@/components/ui/separator"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -32,6 +33,7 @@ export default function DashboardLayout({ children, initUserData }: DashboardLay
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [userData, setUserData] = useState<UserData | null>(initUserData)
+  const [napneOpen, setNapneOpen] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
@@ -49,6 +51,13 @@ export default function DashboardLayout({ children, initUserData }: DashboardLay
     { name: "Blocos", href: "/dashboard/blocks", icon: Cuboid },
     { name: "Salas", href: "/dashboard/classrooms", icon: Home },
     { name: "Horários", href: "/dashboard/timetable", icon: BookOpen },
+  ]
+
+  const napneNavigation = [
+    { name: "Dashboard", href: "/napne/dashboard", icon: LayoutDashboard },
+    { name: "Ajudantes", href: "/napne/helpers", icon: Users },
+    { name: "Estudantes", href: "/napne/students", icon: User },
+    { name: "Solicitações", href: "/napne/requests", icon: FileText },
   ]
 
   if (!isMounted) {
@@ -116,6 +125,40 @@ export default function DashboardLayout({ children, initUserData }: DashboardLay
                   {item.name}
                 </Link>
               ))}
+              <Separator className="my-4 bg-green-100 dark:bg-green-900" />
+              <button
+                type="button"
+                className={cn(
+                  "flex w-full items-center rounded-md px-2 py-2 text-base font-semibold tracking-wide transition-colors uppercase",
+                  napneOpen ? "bg-accent text-accent-foreground" : "text-green-700 dark:text-green-400 hover:bg-accent/50 hover:text-accent-foreground"
+                )}
+                onClick={() => setNapneOpen((open) => !open)}
+              >
+                <Users className="mr-4 h-6 w-6 flex-shrink-0" />
+                NAPNE
+                <ChevronDown className={cn("ml-auto transition-transform", napneOpen && "rotate-180")}/>
+              </button>
+              {napneOpen && (
+                <div className="ml-8 flex flex-col gap-1 mt-1">
+                  {napneNavigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={cn(
+                        pathname === item.href
+                          ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-400"
+                          : "text-muted-foreground hover:bg-green-50 dark:hover:bg-green-950 hover:text-green-700 dark:hover:text-green-400",
+                        "group flex items-center rounded-md px-2 py-2 text-base font-medium"
+                      )}
+                      onClick={() => setSidebarOpen(false)}
+                    >
+                      <item.icon className="mr-4 h-5 w-5 flex-shrink-0" />
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+              <Separator className="my-4 bg-green-100 dark:bg-green-900" />
             </nav>
           </div>
           <div className="border-t p-4">
@@ -185,6 +228,39 @@ export default function DashboardLayout({ children, initUserData }: DashboardLay
                   {item.name}
                 </Link>
               ))}
+              <Separator className="my-4 bg-green-100 dark:bg-green-900" />
+              <button
+                type="button"
+                className={cn(
+                  "flex w-full items-center rounded-md px-2 py-2 text-sm font-semibold tracking-wide transition-colors uppercase",
+                  napneOpen ? "bg-accent text-accent-foreground" : "text-green-700 dark:text-green-400 hover:bg-accent/50 hover:text-accent-foreground"
+                )}
+                onClick={() => setNapneOpen((open) => !open)}
+              >
+                <Users className="mr-3 h-5 w-5 flex-shrink-0" />
+                NAPNE
+                <ChevronDown className={cn("ml-auto transition-transform", napneOpen && "rotate-180")}/>
+              </button>
+              {napneOpen && (
+                <div className="ml-8 flex flex-col gap-1 mt-1">
+                  {napneNavigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={cn(
+                        pathname === item.href
+                          ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-400"
+                          : "text-muted-foreground hover:bg-green-50 dark:hover:bg-green-950 hover:text-green-700 dark:hover:text-green-400",
+                        "group flex items-center rounded-md px-2 py-2 text-sm font-medium"
+                      )}
+                    >
+                      <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+              <Separator className="my-4 bg-green-100 dark:bg-green-900" />
             </nav>
           </div>
           <div className="border-t p-4">

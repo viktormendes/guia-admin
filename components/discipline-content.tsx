@@ -182,7 +182,7 @@ export default function DisciplinesContent({
       if (currentPrereqs.includes(d.id)) return false
 
       // Filter by search term if provided
-      if (searchPrerequisite && !d.name.toLowerCase().includes(searchPrerequisite.toLowerCase())) return false
+      if (searchPrerequisite && !d?.name?.toLowerCase()?.includes(searchPrerequisite.toLowerCase())) return false
 
       return true
     })
