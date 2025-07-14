@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { fetchData } from "@/lib/api"
 import { DataTableComponent } from "./DataTableComponent"
 import { LineChartCard } from "./LineChartCard"
