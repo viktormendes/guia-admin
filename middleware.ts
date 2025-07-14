@@ -34,8 +34,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Se o usuário estiver em uma rota protegida (`/dashboard/*`)
-  if (pathname.startsWith("/dashboard")) {
+  // Se o usuário estiver em uma rota protegida (`/dashboard/*` ou `/napne/*`)
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/napne")) {
     if (!jwt) {
       // Se não houver token, redireciona para a página inicial (`/`)
       return NextResponse.redirect(new URL("/", request.url));
@@ -73,5 +73,5 @@ export async function middleware(request: NextRequest) {
 
 // Configura o middleware para rodar nas rotas `/dashboard/*` e `/`
 export const config = {
-  matcher: ["/dashboard/:path*", "/"],
+  matcher: ["/dashboard/:path*", "/napne/:path*", "/"],
 };
