@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Filter, Plus, Clock, Calendar, Info, User } from "lucide-react"
 import StudentsFiltersClient from "./StudentsFiltersClient"
 import StudentsClientActions from "./StudentsClientActions"
+import { Suspense } from "react"
 
 const PAGE_SIZE = 12
 
@@ -28,10 +29,12 @@ export default async function StudentsPage({ searchParams }: { searchParams: { p
           <h1 className="text-2xl font-semibold text-[#101828]">Visualização Estudantes</h1>
           <span className="text-sm text-[#667085]">Mostrando: Todos os estudantes cadastrados</span>
         </div>
-        <StudentsFiltersClient
-          searchDefault={search}
-          page={page}
-        />
+        <Suspense fallback={null}>
+          <StudentsFiltersClient
+            searchDefault={search}
+            page={page}
+          />
+        </Suspense>
       </div>
       <div className="flex flex-col gap-3 px-8 pb-4">
         {students.map((s: any) => (
